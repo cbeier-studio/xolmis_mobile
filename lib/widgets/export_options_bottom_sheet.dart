@@ -447,13 +447,17 @@ class _ExportOptionsContentState extends State<_ExportOptionsContent> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    '${displayPrefix}_$_sampleTimestamp$previewExtensions',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                      fontFamily: 'monospace',
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: Text(
+                      '${displayPrefix}_$_sampleTimestamp$previewExtensions',
+                      key: ValueKey<String>('${displayPrefix}_$previewExtensions'),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontFamily: 'monospace',
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -472,58 +476,62 @@ class _ExportOptionsContentState extends State<_ExportOptionsContent> {
           ),
           const SizedBox(height: 10),
 
-          if (_isLoadingFormats)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.all(12.0),
-                child: CircularProgressIndicator(year2023: false),
-              ),
-            )
-          else
-            Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: widget.availableFormats.map((format) {
-                final isSelected = _selectedFormats.contains(format);
-                return FilterChip(
-                  // avatar: Icon(
-                  //   format.icon,
-                  //   size: 18,
-                  //   color: isSelected
-                  //       ? theme.colorScheme.onSecondaryContainer
-                  //       : theme.colorScheme.onSurfaceVariant,
-                  // ),
-                  label: Text(format.label),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    _toggleFormat(format, selected);
-                  },
-                );
-              }).toList(),
-            ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: _isLoadingFormats
+                ? const Center(
+                    key: ValueKey('loading_formats'),
+                    child: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: CircularProgressIndicator(year2023: false),
+                    ),
+                  )
+                : Wrap(
+                    key: const ValueKey('formats_wrap'),
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: widget.availableFormats.map((format) {
+                      final isSelected = _selectedFormats.contains(format);
+                      return FilterChip(
+                        label: Text(format.label),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          _toggleFormat(format, selected);
+                        },
+                      );
+                    }).toList(),
+                  ),
+          ),
 
-          if (!isFormatValid && !_isLoadingFormats) ...[
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 16,
-                  color: theme.colorScheme.error,
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    S.of(context).selectAtLeastOneFormat,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.error,
-                      fontWeight: FontWeight.w500,
+          AnimatedCrossFade(
+            duration: const Duration(milliseconds: 200),
+            crossFadeState: (!isFormatValid && !_isLoadingFormats)
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            firstChild: const SizedBox.shrink(),
+            secondChild: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 16,
+                    color: theme.colorScheme.error,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      S.of(context).selectAtLeastOneFormat,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.error,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ],
+          ),
 
           // Container for future format-specific and general settings
           // Developers can add format-specific options below when needed.

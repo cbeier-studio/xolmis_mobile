@@ -607,7 +607,9 @@ class _AppImageScreenState extends State<AppImageScreen> {
               //         }),
             ) : null,
             child: 
-                 image.imagePath.isNotEmpty ? Image.file(
+                 image.imagePath.isNotEmpty ? Hero(
+                   tag: image.imagePath,
+                   child: Image.file(
                     File(image.imagePath),
                     fit: BoxFit.cover,
                    errorBuilder: (context, error, stackTrace) {
@@ -626,7 +628,8 @@ class _AppImageScreenState extends State<AppImageScreen> {
                        ),
                      );
                    },
-                  ) : Center(
+                  ),
+                 ) : Center(
                     child: Icon(Icons.image_not_supported_outlined, color: Colors.grey.shade500, size: 24,),
                   ),
                 ),

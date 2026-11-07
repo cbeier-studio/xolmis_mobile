@@ -161,15 +161,18 @@ class _FilterSelectionBottomSheetContentState<T>
               ],
               const SizedBox(height: 8),
               Expanded(
-                child:
-                    filteredItems.isEmpty
-                        ? Center(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: filteredItems.isEmpty
+                      ? Center(
+                          key: const ValueKey('empty_state'),
                           child: Text(
                             widget.emptyStateLabel ?? S.of(context).noResults,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         )
-                        : ListView.builder(
+                      : ListView.builder(
+                          key: const ValueKey('items_list'),
                           controller: scrollController,
                           itemCount: filteredItems.length,
                           itemBuilder: (context, index) {
@@ -185,6 +188,7 @@ class _FilterSelectionBottomSheetContentState<T>
                             );
                           },
                         ),
+                ),
               ),
             ],
           ),

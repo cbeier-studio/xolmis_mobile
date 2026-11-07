@@ -161,6 +161,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               },
             ),
             InkWell(
+              borderRadius: BorderRadius.circular(8.0),
               onTap: _showEditCountDialog,
               child: Selector<SpeciesProvider, int>(
                 selector: (context, speciesProvider) => speciesProvider.individualsCountNotifier.value,
@@ -175,9 +176,22 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                    child: Text(
-                      widget.species.count.toString(),
-                      style: TextTheme.of(context).bodyMedium,
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 180),
+                      transitionBuilder: (Widget child, Animation<double> animation) {
+                        return ScaleTransition(
+                          scale: animation,
+                          child: FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Text(
+                        widget.species.count.toString(),
+                        key: ValueKey<int>(widget.species.count),
+                        style: TextTheme.of(context).bodyMedium,
+                      ),
                     ),
                   );
                 },

@@ -595,9 +595,23 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           if (useSideNavRail || useFixedNavDrawer)
             VerticalDivider(),
           Expanded(
-            child: _navItems[_selectedIndex].screenBuilder.call(
-              context,
-              _scaffoldKey,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 220),
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+              child: KeyedSubtree(
+                key: ValueKey<int>(_selectedIndex),
+                child: _navItems[_selectedIndex].screenBuilder.call(
+                  context,
+                  _scaffoldKey,
+                ),
+              ),
             ),
           ),
         ],
