@@ -4520,6 +4520,12 @@ abstract class S {
   /// **'Threatened Species'**
   String get threatenedSpecies;
 
+  /// Source of conservation status label
+  ///
+  /// In en, this message translates to:
+  /// **'Source: IUCN Red List'**
+  String get conservationStatusSource;
+
   /// Label for the shared species indicator
   ///
   /// In en, this message translates to:

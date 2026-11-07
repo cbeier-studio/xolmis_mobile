@@ -3202,6 +3202,11 @@
     "type": "text",
     "description": "Threatened species label"
   },
+  "conservationStatusSource": "Fonte: Lista Vermelha da IUCN",
+  "@conservationStatusSource": {
+    "type": "text",
+    "description": "Source of conservation status label"
+  },
   "sharedSpecies": "Espécies compartilhadas",
   "@sharedSpecies": {
     "type": "text",

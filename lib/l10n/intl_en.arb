@@ -3773,6 +3773,11 @@
         "type": "text",
         "description": "Threatened species label"
     },
+    "conservationStatusSource": "Source: IUCN Red List",
+    "@conservationStatusSource": {
+        "type": "text",
+        "description": "Source of conservation status label"
+    },
     "sharedSpecies": "Shared species",
     "@sharedSpecies": {
         "type": "text",

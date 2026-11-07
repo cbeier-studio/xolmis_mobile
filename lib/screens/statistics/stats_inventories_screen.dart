@@ -1699,6 +1699,8 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               ),
             ),
           ],
+          const SizedBox(height: 6),
+          Text(S.of(context).conservationStatusSource, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600, fontSize: 10)),
         ],
       ),
     );

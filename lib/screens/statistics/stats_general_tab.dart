@@ -352,7 +352,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
         _buildMetricTile(
           label: S.of(context).recordedSpecies,
           value: '${totalDistinctSpecies}',
-          valueColor: XolmisColors.primary,
+          valueColor: XolmisColors.jacarandaCore,
           isDark: isDark,
         ),
         _buildMetricTile(
@@ -1186,7 +1186,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: XolmisColors.onSuccessContainer,
+                          color: XolmisColors.successOnContainer,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -1216,7 +1216,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: XolmisColors.onWarningContainer,
+                          color: XolmisColors.warningOnContainer,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),

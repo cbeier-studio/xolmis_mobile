@@ -2489,6 +2489,9 @@ class SPt extends S {
   String get threatenedSpecies => 'Espécies ameaçadas';
 
   @override
+  String get conservationStatusSource => 'Fonte: Lista Vermelha da IUCN';
+
+  @override
   String get sharedSpecies => 'Espécies compartilhadas';
 
   @override

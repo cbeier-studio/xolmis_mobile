@@ -2452,6 +2452,9 @@ class SEn extends S {
   String get threatenedSpecies => 'Threatened Species';
 
   @override
+  String get conservationStatusSource => 'Source: IUCN Red List';
+
+  @override
   String get sharedSpecies => 'Shared species';
 
   @override

@@ -735,7 +735,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
               const Icon(Icons.trending_up, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.of(context).speciesRichnessPerYear,
+                S.of(context).recordsPerYear,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -947,7 +947,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: XolmisColors.onSuccessContainer,
+                          color: XolmisColors.successOnContainer,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -977,7 +977,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: XolmisColors.onWarningContainer,
+                          color: XolmisColors.warningOnContainer,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -1249,7 +1249,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
           barRods: [
             BarChartRodData(
               toY: count.toDouble(), // record count is the value of Y axis
-              color: XolmisColors.primary,
+              color: XolmisColors.jacarandaCore,
               width: 16,
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
             ),
