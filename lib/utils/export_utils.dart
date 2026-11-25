@@ -688,6 +688,7 @@ Future<List<List<dynamic>>> buildInventoriesSummaryRows(List<Inventory> inventor
     rows.add([
       inventory.id,
       inventoryTypeFriendlyNames[inventory.type] ?? '',
+      transportModeFriendlyNames[inventory.transportMode] ?? '',
       inventory.duration,
       inventory.maxSpecies,
       inventory.startTime != null ? DateFormat('yyyy-MM-dd').format(inventory.startTime!) : '',
