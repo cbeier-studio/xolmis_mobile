@@ -81,11 +81,18 @@ class InventoryCompletionService {
     final bool remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
     final bool remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
 
+    // Load up-to-date vegetation and weather from DB/providers into inventory
+    await vegetationProvider.loadVegetationForInventory(inventory.id);
+    await weatherProvider.loadWeatherForInventory(inventory.id);
+    inventory.vegetationList = vegetationProvider.getVegetationForInventory(inventory.id);
+    inventory.weatherList = weatherProvider.getWeatherForInventory(inventory.id);
+
     bool isVegetationListEmpty = inventory.vegetationList.isEmpty;
     bool isWeatherListEmpty = inventory.weatherList.isEmpty;
 
     // 1. Vegetation reminder
     if (remindVegetationEmpty && isVegetationListEmpty) {
+      if (!context.mounted) return false;
       final vegetationAction = await _showConditionalReminderDialog(
         context,
         title: S.of(context).warningTitle,
@@ -100,6 +107,7 @@ class InventoryCompletionService {
           );
           if (vegetationAdded != null && vegetationAdded) {
             await vegetationProvider.loadVegetationForInventory(inventory.id);
+            inventory.vegetationList = vegetationProvider.getVegetationForInventory(inventory.id);
             proceedToFinalize = true;
           }
         }
@@ -111,6 +119,7 @@ class InventoryCompletionService {
 
     // 2. Weather reminder
     if (proceedToFinalize && remindWeatherEmpty && isWeatherListEmpty) {
+      if (!context.mounted) return false;
       final weatherAction = await _showConditionalReminderDialog(
         context,
         title: S.of(context).warningTitle,
@@ -125,6 +134,7 @@ class InventoryCompletionService {
           );
           if (weatherAdded != null && weatherAdded) {
             await weatherProvider.loadWeatherForInventory(inventory.id);
+            inventory.weatherList = weatherProvider.getWeatherForInventory(inventory.id);
             proceedToFinalize = true;
           }
         }

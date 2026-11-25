@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unified field journal export flow using export options dialog and added PDF export support.
 
 ### Fixed
+- Fixed inventory ID UI update when generated via the auto-generate dialog (`_onGenerateIdPressed`).
 - Fixed Excel export cell formatting: integer fields are now formatted as numeric cells and empty/blank fields are exported as true empty cells.
 - The dialog to change the number of individuals of a species was not applying the value informed.
 - Fixed single record export flow for inventories, nests, specimens, and field journal when triggered from bottom action sheets.

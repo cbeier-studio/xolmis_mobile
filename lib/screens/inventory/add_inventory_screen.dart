@@ -677,61 +677,69 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   Future<void> _onGenerateIdPressed() async {
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
+    String expedition = '';
+    String siteAbbreviation = '';
+
     final result = await showDialog<Map<String, String>>(
       context: context,
       builder: (BuildContext context) {
-        String expedition = '';
-        String siteAbbreviation = '';
-
-        return AlertDialog(
-          title: Text(S.of(context).generateId),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                maxLength: 20,
-                textCapitalization: TextCapitalization.words,
-                autofocus: true,
-                decoration: InputDecoration(
-                  labelText: S.of(context).expedition,
-                  border: const OutlineInputBorder(),
-                  helperText: S.of(context).optional,
+        return StatefulBuilder(
+          builder: (dialogContext, setDialogState) {
+            return AlertDialog(
+              title: Text(S.of(dialogContext).generateId),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      initialValue: expedition,
+                      maxLength: 20,
+                      textCapitalization: TextCapitalization.words,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        labelText: S.of(dialogContext).expedition,
+                        border: const OutlineInputBorder(),
+                        helperText: S.of(dialogContext).optional,
+                      ),
+                      onChanged: (value) => expedition = value.trim(),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      initialValue: siteAbbreviation,
+                      maxLength: 20,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: InputDecoration(
+                        labelText: S.of(dialogContext).siteAbbreviation,
+                        border: const OutlineInputBorder(),
+                        helperText: S.of(dialogContext).optional,
+                      ),
+                      onChanged: (value) => siteAbbreviation = value.trim(),
+                    ),
+                  ],
                 ),
-                onChanged: (value) => expedition = value,
               ),
-              const SizedBox(height: 16.0),
-              TextField(
-                maxLength: 20,
-                textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
-                  labelText: S.of(context).siteAbbreviation,
-                  border: const OutlineInputBorder(),
-                  helperText: S.of(context).optional,
+              actions: <Widget>[
+                TextButton(
+                  child: Text(S.of(dialogContext).cancel),
+                  onPressed: () => Navigator.of(dialogContext).pop(),
                 ),
-                onChanged: (value) => siteAbbreviation = value,
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(S.of(context).cancel),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop({
-                'expedition': expedition,
-                'siteAbbreviation': siteAbbreviation,
-              }),
-            ),
-          ],
+                TextButton(
+                  child: Text(S.of(dialogContext).ok),
+                  onPressed: () => Navigator.of(dialogContext).pop({
+                    'expedition': expedition,
+                    'siteAbbreviation': siteAbbreviation,
+                  }),
+                ),
+              ],
+            );
+          },
         );
       },
     );
 
     if (result != null && mounted) {
-      final expedition = result['expedition'] ?? '';
-      final siteAbbreviation = result['siteAbbreviation'] ?? '';
+      final selectedExpedition = result['expedition'] ?? '';
+      final selectedSite = result['siteAbbreviation'] ?? '';
 
       final prefs = await SharedPreferences.getInstance();
       final observerAbbrev = prefs.getString('observerAcronym') ?? '';
@@ -742,8 +750,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       final inventoryTypeLetter = getInventoryTypeLetter(_selectedType);
 
       final sequentialNumber = await inventoryProvider.getNextSequentialNumber(
-        expedition,
-        siteAbbreviation,
+        selectedExpedition,
+        selectedSite,
         observerAbbrev,
         now.year,
         now.month,
@@ -751,14 +759,18 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         inventoryTypeLetter,
       );
 
-      final expeditionPart = expedition.isNotEmpty ? '$expedition-' : '';
-      final sitePart = siteAbbreviation.isNotEmpty ? '$siteAbbreviation-' : '';
+      if (!mounted) return;
+
+      final expeditionPart = selectedExpedition.isNotEmpty ? '$selectedExpedition-' : '';
+      final sitePart = selectedSite.isNotEmpty ? '$selectedSite-' : '';
       final typeLetterPart = inventoryTypeLetter ?? '';
       final seqPart = sequentialNumber.toString().padLeft(2, '0');
 
       final inventoryId = '$expeditionPart$sitePart$observerAbbrev-$year$month$day-$typeLetterPart$seqPart';
 
-      _idController.text = inventoryId;
+      setState(() {
+        _idController.text = inventoryId;
+      });
     }
   }
 
