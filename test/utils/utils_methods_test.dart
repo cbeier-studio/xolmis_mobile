@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -217,11 +218,12 @@ void main() {
 
       final result = prepareAccumulatedSpeciesData(inventories);
 
-      expect(result, hasLength(2));
-      expect(result[0].x, equals(0));
-      expect(result[0].y, equals(2));
+      expect(result, hasLength(3));
+      expect(result[0], equals(const FlSpot(0, 0)));
       expect(result[1].x, equals(1));
-      expect(result[1].y, equals(3));
+      expect(result[1].y, equals(2));
+      expect(result[2].x, equals(2));
+      expect(result[2].y, equals(3));
     });
 
     test('prepareAccumulatedSpeciesWithinSample ignores out-of-inventory species', () {
@@ -248,9 +250,10 @@ void main() {
 
       final result = prepareAccumulatedSpeciesWithinSample(inventories);
 
-      expect(result, hasLength(2));
-      expect(result[0].y, equals(1));
-      expect(result[1].y, equals(2));
+      expect(result, hasLength(3));
+      expect(result[0], equals(const FlSpot(0, 0)));
+      expect(result[1].y, equals(1));
+      expect(result[2].y, equals(2));
     });
 
     test('getOccurrencesByHourOfDay counts only species sample times', () {
